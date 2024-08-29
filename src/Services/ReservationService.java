@@ -31,23 +31,40 @@ public class ReservationService {
         this.rooms = rooms;
     }
 
+    public Reservation findById(int reservationId) {
+        for (Reservation reservation : reservations) {
+            if (reservation.getId() == reservationId) {
+                return reservation;
+            }
+        }
+        return null;
+    }
+
     public Reservation addReservation(Room room, LocalDate startDate, LocalDate endDate) {
         Reservation reservation = new Reservation(reservations.size() + 1, room, startDate, endDate);
         reservations.add(reservation);
         room.setAvailable(false);
+        System.out.println("reservation added");
         return reservation;
     }
 
     public void deleteReservation(int reservationId) {
-        Reservation reservation = reservations.get(reservationId);
+        Reservation reservation = findById(reservationId);
+        reservation.getRoom().setAvailable(false);
         reservations.remove(reservation);
+        System.out.println("reservation deleted");
     }
 
-    public Reservation getReservation(int reservationId) {
-        for (int i = 0; i < reservations.size(); i++) {
-            if (reservations.get(i).getId() == reservationId) {
-                return reservations.get(i);
-            }
+    public Reservation updateReservation(int reservationId, Reservation newReservation) {
+        Reservation currentReservation = findById(reservationId);
+        if (currentReservation != null) {
+            currentReservation.setRoom(newReservation.getRoom());
+            currentReservation.setStartDate(newReservation.getStartDate());
+            currentReservation.setEndDate(newReservation.getEndDate());
+
+            return currentReservation;
         }
+        System.out.println("Reservation not found.");
+        return null;
     }
 }
