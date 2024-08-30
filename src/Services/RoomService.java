@@ -35,9 +35,9 @@ public class RoomService {
         System.out.println("======================================================");
         for (Room room : rooms) {
             System.out.println();
-            
-            System.out.println("room: " + room.getRoomID());
-            System.out.println("available: " + room.isAvailable());
+
+            System.out.println("room : " + room.getRoomID());
+            System.out.println("available : " + room.isAvailable());
             System.out.println("======================================================");
         }
     }

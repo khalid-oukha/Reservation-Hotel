@@ -20,7 +20,7 @@ public class Main {
         rooms.add(new Room(2, true));
 
         List<Reservation> reservations = new ArrayList<Reservation>();
-        
+
         RoomService roomService = new RoomService(rooms);
         ReservationService reservationService = new ReservationService(reservations, rooms);
 
@@ -29,18 +29,18 @@ public class Main {
         int option;
 
         do {
-            System.out.println("======================================================");
-            System.out.println("=                   Reservation System               =");
-            System.out.println("======================================================");
-            System.out.println("1. Show all the rooms");
-            System.out.println("2. Show all the reservations");
-            System.out.println("3. Add a Reservation");
-            System.out.println("4. Remove a Reservation");
-            System.out.println("5. Update a Reservation");
-            System.out.println("6. Search for a Reservation");
-            System.out.println("0. Exit");
-            System.out.println();
-            System.out.print("Please Enter your option: ");
+            System.out.println("============================================================================================================");
+            System.out.println("=                                               Reservation System                                         =");
+            System.out.println("============================================================================================================");
+            System.out.println("=    1. Show all the rooms");
+            System.out.println("=    2. Show all the reservations");
+            System.out.println("=    3. Add a Reservation");
+            System.out.println("=    4. Remove a Reservation");
+            System.out.println("=    5. Update a Reservation");
+            System.out.println("=    6. Search for a Reservation");
+            System.out.println("=    0. Exit");
+            System.out.println("============================================================================================================");
+            System.out.println("=    Please Enter your option: ");
             option = scanner.nextInt();
 
             switch (option) {
@@ -51,24 +51,33 @@ public class Main {
                     reservationService.findAllReservations(reservations);
                     break;
                 case 3:
-                    System.out.print("Enter the room number: ");
+                    System.out.println("============================================================================================================");
+                    System.out.println("=                                               ADD ROOM                                         =");
+                    System.out.println("============================================================================================================");
+                    System.out.print("    Enter the room number: ");
                     int roomNumber = scanner.nextInt();
 
-                    System.out.print("Enter Date start :");
+                    System.out.print("    Enter Date start :");
                     LocalDate dateStart = LocalDate.parse(scanner.next());
 
-                    System.out.print("Enter Date end :");
+                    System.out.print("    Enter Date end :");
                     LocalDate dateEnd = LocalDate.parse(scanner.next());
 
                     Room selectedRoom = roomService.findById(roomNumber);
                     if (selectedRoom != null) {
                         DateInterval dateInterval = new DateInterval(dateStart, dateEnd);
                         reservationService.addReservation(selectedRoom, dateInterval);
-                        System.out.println("Reservation added for Rooom " + roomNumber);
+                        System.out.println("    Reservation added for Rooom " + roomNumber);
                     }
 
                     break;
                 case 4:
+                    System.out.println("============================================================================================================");
+                    System.out.println("=                                               DELETE RESERVATION                                         =");
+                    System.out.println("============================================================================================================");
+                    System.out.print("Enter the reservation ID please: ");
+                    int reservationId = scanner.nextInt();
+                    reservationService.deleteReservation(reservationId);
                     break;
                 case 5:
                     break;

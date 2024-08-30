@@ -45,15 +45,27 @@ public class ReservationService {
         Reservation reservation = new Reservation(reservations.size() + 1, room, dateInterval);
         reservations.add(reservation);
         room.setAvailable(false);
-        System.out.println("reservation added");
+        System.out.println("============================================================================================================");
+        System.out.println("=                                              Reservation Added                                           =");
+        System.out.println("============================================================================================================");
         return reservation;
     }
 
     public void deleteReservation(int reservationId) {
         Reservation reservation = findById(reservationId);
-        reservation.getRoom().setAvailable(false);
-        reservations.remove(reservation);
-        System.out.println("reservation deleted");
+
+        if (reservation != null) {
+            reservation.getRoom().setAvailable(true);
+            reservations.remove(reservation);
+
+            System.out.println("============================================================================================================");
+            System.out.println("=                                            Reservation Cancelled                                         =");
+            System.out.println("============================================================================================================");
+        } else {
+            System.out.println("============================================================================================================");
+            System.out.println("=                                            Reservation Not Found                                         =");
+            System.out.println("============================================================================================================");
+        }
     }
 
     public Reservation updateReservation(int reservationId, Reservation newReservation) {
@@ -63,7 +75,9 @@ public class ReservationService {
             currentReservation.setDate(newReservation.getDate());
             return currentReservation;
         }
-        System.out.println("Reservation not found.");
+        System.out.println("============================================================================================================");
+        System.out.println("=                                            Reservation Not Found                                         =");
+        System.out.println("============================================================================================================");
         return null;
     }
 
@@ -73,6 +87,8 @@ public class ReservationService {
         System.out.println("=                      Reservations                  =");
         System.out.println("======================================================");
         for (Reservation reservation : reservations) {
+            System.out.println("==");
+
             System.out.println(reservation.getRoom().getRoomID());
             System.out.println(reservation.getRoom().isAvailable());
             System.out.println(reservation.getDate().getStartDate());
