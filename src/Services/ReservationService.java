@@ -2,8 +2,8 @@ package Services;
 
 import Models.Reservation;
 import Models.Room;
+import commons.DateInterval;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class ReservationService {
@@ -40,8 +40,9 @@ public class ReservationService {
         return null;
     }
 
-    public Reservation addReservation(Room room, LocalDate startDate, LocalDate endDate) {
-        Reservation reservation = new Reservation(reservations.size() + 1, room, startDate, endDate);
+
+    public Reservation addReservation(Room room, DateInterval dateInterval) {
+        Reservation reservation = new Reservation(reservations.size() + 1, room, dateInterval);
         reservations.add(reservation);
         room.setAvailable(false);
         System.out.println("reservation added");
@@ -59,12 +60,23 @@ public class ReservationService {
         Reservation currentReservation = findById(reservationId);
         if (currentReservation != null) {
             currentReservation.setRoom(newReservation.getRoom());
-            currentReservation.setStartDate(newReservation.getStartDate());
-            currentReservation.setEndDate(newReservation.getEndDate());
-
+            currentReservation.setDate(newReservation.getDate());
             return currentReservation;
         }
         System.out.println("Reservation not found.");
         return null;
+    }
+
+    public void findAllReservations(List<Reservation> reservations) {
+        System.out.println();
+        System.out.println("======================================================");
+        System.out.println("=                      Reservations                  =");
+        System.out.println("======================================================");
+        for (Reservation reservation : reservations) {
+            System.out.println(reservation.getRoom().getRoomID());
+            System.out.println(reservation.getRoom().isAvailable());
+            System.out.println(reservation.getDate().getStartDate());
+            System.out.println(reservation.getDate().getEndDate());
+        }
     }
 }

@@ -1,6 +1,10 @@
 import Models.Reservation;
 import Models.Room;
+import Services.ReservationService;
+import Services.RoomService;
+import commons.DateInterval;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -16,6 +20,9 @@ public class Main {
         rooms.add(new Room(2, true));
 
         List<Reservation> reservations = new ArrayList<Reservation>();
+        
+        RoomService roomService = new RoomService(rooms);
+        ReservationService reservationService = new ReservationService(reservations, rooms);
 
         //Menu
         Scanner scanner = new Scanner(System.in);
@@ -38,12 +45,28 @@ public class Main {
 
             switch (option) {
                 case 1:
-                    System.out.print("Enter room number: ");
-                    
+                    roomService.findAll(rooms);
                     break;
                 case 2:
+                    reservationService.findAllReservations(reservations);
                     break;
                 case 3:
+                    System.out.print("Enter the room number: ");
+                    int roomNumber = scanner.nextInt();
+
+                    System.out.print("Enter Date start :");
+                    LocalDate dateStart = LocalDate.parse(scanner.next());
+
+                    System.out.print("Enter Date end :");
+                    LocalDate dateEnd = LocalDate.parse(scanner.next());
+
+                    Room selectedRoom = roomService.findById(roomNumber);
+                    if (selectedRoom != null) {
+                        DateInterval dateInterval = new DateInterval(dateStart, dateEnd);
+                        reservationService.addReservation(selectedRoom, dateInterval);
+                        System.out.println("Reservation added for Rooom " + roomNumber);
+                    }
+
                     break;
                 case 4:
                     break;
@@ -60,5 +83,9 @@ public class Main {
 
             }
         } while (option != 0);
+
+
     }
+
+
 }

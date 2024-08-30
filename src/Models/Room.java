@@ -2,7 +2,7 @@ package Models;
 
 public class Room {
     private int RoomID;
-    private boolean isAvailable;
+    private boolean isAvailable = true;
 
     public Room(int roomID, boolean isAvailable) {
         this.RoomID = roomID;
@@ -12,6 +12,7 @@ public class Room {
     public int getRoomID() {
         return RoomID;
     }
+
     public void setRoomID(int roomID) {
         RoomID = roomID;
     }
@@ -19,6 +20,7 @@ public class Room {
     public boolean isAvailable() {
         return isAvailable;
     }
+
     public void setAvailable(boolean available) {
         isAvailable = available;
     }
