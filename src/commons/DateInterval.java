@@ -7,8 +7,13 @@ public class DateInterval {
     private LocalDate endDate;
 
     public DateInterval(LocalDate startDate, LocalDate endDate) {
-        this.startDate = startDate;
-        this.endDate = endDate;
+        if (startDate.isBefore(endDate) && startDate.isAfter(LocalDate.now())) {
+            this.startDate = startDate;
+            this.endDate = endDate;
+        } else {
+            throw new IllegalArgumentException("invalid date range");
+        }
+
     }
 
     public LocalDate getStartDate() {

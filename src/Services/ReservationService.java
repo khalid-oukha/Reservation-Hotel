@@ -1,5 +1,6 @@
 package Services;
 
+import Models.Client;
 import Models.Reservation;
 import Models.Room;
 import commons.DateInterval;
@@ -41,14 +42,22 @@ public class ReservationService {
     }
 
 
-    public Reservation addReservation(Room room, DateInterval dateInterval) {
-        Reservation reservation = new Reservation(reservations.size() + 1, room, dateInterval);
-        reservations.add(reservation);
-        room.setAvailable(false);
-        System.out.println("============================================================================================================");
-        System.out.println("=                                              Reservation Added                                           =");
-        System.out.println("============================================================================================================");
-        return reservation;
+    public void addReservation(Client client, Room room, DateInterval dateInterval) {
+
+        if (room.isAvailable()) {
+            Reservation reservation = new Reservation(reservations.size() + 1, client, room, dateInterval);
+            reservations.add(reservation);
+            room.setAvailable(false);
+            System.out.println("============================================================================================================");
+            System.out.println("=                                              Reservation Added                                           =");
+            System.out.println("============================================================================================================");
+            findById(reservation.getId());
+        } else {
+            System.out.println("============================================================================================================");
+            System.out.println("=                                     Room is not available for Now                                        =");
+            System.out.println("============================================================================================================");
+        }
+
     }
 
     public void deleteReservation(int reservationId) {
@@ -56,7 +65,6 @@ public class ReservationService {
 
         if (reservation != null) {
             reservation.getRoom().setAvailable(true);
-            reservations.remove(reservation);
 
             System.out.println("============================================================================================================");
             System.out.println("=                                            Reservation Cancelled                                         =");
@@ -86,13 +94,18 @@ public class ReservationService {
         System.out.println("======================================================");
         System.out.println("=                      Reservations                  =");
         System.out.println("======================================================");
-        for (Reservation reservation : reservations) {
-            System.out.println("==");
+        if (reservations.isEmpty()) {
+            System.out.println("==============There is No Reservations for now ! ============");
+        } else {
+            for (Reservation reservation : reservations) {
+                System.out.println("==");
 
-            System.out.println(reservation.getRoom().getRoomID());
-            System.out.println(reservation.getRoom().isAvailable());
-            System.out.println(reservation.getDate().getStartDate());
-            System.out.println(reservation.getDate().getEndDate());
+                System.out.println("Room Id :" + reservation.getRoom().getRoomID());
+                System.out.println("Room reserved by : " + reservation.getClient().getFullName());
+                System.out.println("Reservation Start Date :" + reservation.getDate().getStartDate());
+                System.out.println("Reservation End Date :" + reservation.getDate().getEndDate());
+            }
         }
     }
 }
+
