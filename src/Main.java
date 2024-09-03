@@ -6,6 +6,7 @@ import Services.RoomService;
 import commons.DateInterval;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,6 @@ public class Main {
     public static void main(String[] args) {
 
         List<Room> rooms = new ArrayList<Room>();
-
 
         Room room1 = new Room(4, true);
         Room room2 = new Room(5, false);
@@ -37,7 +37,7 @@ public class Main {
         clients.put(1, client1);
         clients.put(2, client2);
 
-        DateInterval dateInterval0 = new DateInterval(LocalDate.now().plusDays(1), LocalDate.now().plusDays(2));
+        DateInterval dateInterval0 = new DateInterval(LocalDate.of(2020, 9, 3), LocalDate.of(2023, 9, 4));
         DateInterval dateInterval1 = new DateInterval(LocalDate.now().plusDays(1), LocalDate.now().plusDays(4));
         DateInterval dateInterval2 = new DateInterval(LocalDate.now().plusDays(1), LocalDate.now().plusDays(6));
 
@@ -53,6 +53,9 @@ public class Main {
         RoomService roomService = new RoomService(rooms);
         ReservationService reservationService = new ReservationService(reservations, rooms);
 
+
+        reservationService.updateRoomAvailability(reservations);
+
         //Menu
         Scanner scanner = new Scanner(System.in);
         int option;
@@ -64,7 +67,7 @@ public class Main {
             System.out.println("=    1. Show all the rooms");
             System.out.println("=    2. Show all the reservations");
             System.out.println("=    3. Add a Reservation");
-            System.out.println("=    4. Remove a Reservation");
+            System.out.println("=    4. Cancel a Reservation");
             System.out.println("=    5. Change a Reservation");
             System.out.println("=    6. Search for a Reservation");
             System.out.println("=    0. Exit");
@@ -85,21 +88,35 @@ public class Main {
                     System.out.println("============================================================================================================");
                     System.out.print("    Enter the room number: ");
                     int roomNumber = scanner.nextInt();
-                    System.out.print("    Enter the client name: ");
-                    String clientName = scanner.next();
-                    System.out.print("    Enter the Client Cin: ");
-                    String clientCin = scanner.next();
-
-                    System.out.print("    Enter Date start :");
-                    LocalDate dateStart = LocalDate.parse(scanner.next());
-
-                    System.out.print("    Enter Date end :");
-                    LocalDate dateEnd = LocalDate.parse(scanner.next());
-                    Client client = new Client(clientCin, clientName);
                     Room selectedRoom = roomService.findById(roomNumber);
-                    if (selectedRoom != null && selectedRoom.isAvailable()) {
-                        DateInterval dateInterval = new DateInterval(dateStart, dateEnd);
-                        reservationService.addReservation(client, selectedRoom, dateInterval);
+
+                    if (selectedRoom != null) {
+                        if (selectedRoom.isAvailable()) {
+                            try {
+                                System.out.print("    Enter the client name: ");
+                                String clientName = scanner.next();
+                                System.out.print("    Enter the Client Cin: ");
+                                String clientCin = scanner.next();
+
+                                System.out.print("    Enter Date start (yyyy-MM-dd): ");
+                                LocalDate dateStart = LocalDate.parse(scanner.next());
+
+                                System.out.print("    Enter Date end (yyyy-MM-dd): ");
+                                LocalDate dateEnd = LocalDate.parse(scanner.next());
+
+                                Client client = new Client(clientCin, clientName);
+                                DateInterval dateInterval = new DateInterval(dateStart, dateEnd);
+
+                                reservationService.addReservation(client, selectedRoom, dateInterval);
+                                System.out.println("Reservation successfully added!");
+                            } catch (DateTimeParseException e) {
+                                System.out.println("Invalid date format. Please enter the date in the format yyyy-MM-dd.");
+                            } catch (IllegalArgumentException e) {
+                                System.out.println("Error: " + e.getMessage());
+                            }
+                        } else {
+                            System.out.println("Room Already reserved");
+                        }
                     } else {
                         System.out.println("Room not found");
                     }
@@ -107,7 +124,7 @@ public class Main {
                     break;
                 case 4:
                     System.out.println("============================================================================================================");
-                    System.out.println("=                                               DELETE RESERVATION                                         =");
+                    System.out.println("=                                               Cancel RESERVATION                                         =");
                     System.out.println("============================================================================================================");
                     System.out.print("Enter the reservation ID please: ");
                     int reservationId = scanner.nextInt();

@@ -7,13 +7,21 @@ public class DateInterval {
     private LocalDate endDate;
 
     public DateInterval(LocalDate startDate, LocalDate endDate) {
-        if (startDate.isBefore(endDate) && startDate.isAfter(LocalDate.now())) {
-            this.startDate = startDate;
-            this.endDate = endDate;
-        } else {
-            throw new IllegalArgumentException("invalid date range");
+
+        if (startDate.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("Start date cannot be before today");
         }
 
+        if (startDate.isAfter(endDate)) {
+            throw new IllegalArgumentException("Start date cannot be after end date");
+        }
+
+        if (endDate.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("End date cannot be before today");
+        }
+
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public LocalDate getStartDate() {
@@ -21,6 +29,12 @@ public class DateInterval {
     }
 
     public void setStartDate(LocalDate startDate) {
+        if (startDate.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("Start date cannot be before today");
+        }
+        if (startDate.isAfter(this.endDate)) {
+            throw new IllegalArgumentException("Start date cannot be after end date");
+        }
         this.startDate = startDate;
     }
 
@@ -29,6 +43,9 @@ public class DateInterval {
     }
 
     public void setEndDate(LocalDate endDate) {
+        if (endDate.isBefore(this.startDate)) {
+            throw new IllegalArgumentException("End date cannot be before start date");
+        }
         this.endDate = endDate;
     }
 }

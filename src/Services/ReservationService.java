@@ -5,6 +5,7 @@ import Models.Reservation;
 import Models.Room;
 import commons.DateInterval;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class ReservationService {
@@ -104,6 +105,14 @@ public class ReservationService {
                 System.out.println("Room reserved by : " + reservation.getClient().getFullName());
                 System.out.println("Reservation Start Date :" + reservation.getDate().getStartDate());
                 System.out.println("Reservation End Date :" + reservation.getDate().getEndDate());
+            }
+        }
+    }
+
+    public void updateRoomAvailability(List<Reservation> reservations) {
+        for (Reservation reservation : reservations) {
+            if (reservation.getDate().getEndDate().isBefore(LocalDate.now())) {
+                reservation.getRoom().setAvailable(true);
             }
         }
     }
