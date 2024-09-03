@@ -138,7 +138,6 @@ public class Main {
                             }
                         }
 
-
                         System.out.println("Enter the new Date start or press Enter to keep old one: ");
                         String newStartDateInput = scanner.nextLine();
                         LocalDate newStartDate = newStartDateInput.isEmpty() ? reservation.getDate().getStartDate() : LocalDate.parse(newStartDateInput);
